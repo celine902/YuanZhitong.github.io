@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="设计师作品集 - 简约风格设计展示">
+    <meta name="theme-color" content="#000000">
+    <title>设计作品集 | Cargo风格</title>
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        :root {
+            --primary-color: #000;
+            --secondary-color: #fff;
+            --accent-color: #ff3b30;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            overflow-x: hidden;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+            color: var(--secondary-color);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: inherit;
+            text-decoration: none;
+            position: relative;
+            padding-bottom: 2px;
+            font-size: 14px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background: currentColor;
+            transition: width var(--transition-speed) ease;
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        /* 主内容区网格布局 */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 0;
+            margin-top: 80px;
+        }
+
+        .grid-item {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4/5;
+            background: #eee;
+            cursor: pointer;
+            transition: transform var(--transition-speed);
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .grid-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .grid-item:hover .grid-img {
+            transform: scale(1.05);
+        }
+
+        .item-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 25px;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+            color: var(--secondary-color);
+        }
+
+        .grid-item:hover .item-overlay {
+            opacity: 1;
+        }
+
+        .project-title {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .project-category {
+            font-size: 14px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            overflow: auto;
+            padding: 60px;
+        }
+
+        .modal-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            color: #fff;
+        }
+
+        .close-modal {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            font-size: 30px;
+            color: #fff;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .modal-img {
+            width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            margin-bottom: 30px;
+        }
+
+        .modal-info {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .modal-desc {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .modal-date {
+            font-size: 16px;
+            font-style: italic;
+            opacity: 0.7;
+        }
+
+        /* 页脚样式 */
+        .footer {
+            padding: 80px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ddd;
+        }
+
+        .contact-info h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .contact-info p {
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-speed);
+        }
+
+        .social-icon:hover {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+            
+            .portfolio-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .modal {
+                padding: 20px;
+            }
+            
+            .footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo">CREATIVE PORTFOLIO</div>
+        <div class="nav-links">
+            <a href="#home">主页</a>
+            <a href="#projects">作品集</a>
+            <a href="#about">关于</a>
+            <a href="#contact">联系</a>
+        </div>
+    </nav>
+
+    <!-- 作品集网格布局 -->
+    <section class="portfolio-grid" id="projects">
+        <!-- 项目1 -->
+        <div class="grid-item" data-id="project1">
+            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGRlc2lnbnxlbnwwfHwwfHx8MA%3D%3D" alt="品牌设计项目" class="grid-img">
+            <div class="item-overlay">
+                <h3 class="project-title">商业品牌重塑</h3>
+                <div class="project-category">品牌设计</div>
+            </div>
+        </div>
+        
+        <!-- 项目2 -->
+        <div class="grid-item" data-id="project2">
+            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8ZGVzaWdufGVufDB8fDB8fHww" alt="UI设计项目" class="grid-img">
+            <div class="item-overlay">
+                <h3 class="project-title">数字银行应用</h3>
+                <div class="project-category">UI/UX 设计</div>
+            </div>
+        </div>
+        
+        <!-- 项目3 -->
+        <div class="grid-item" data-id="project3">
+            <img src="https://images.unsplash.com/photo-1591165045886-5ade44949b28?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDF8fGRlc2lnbnxlbnwwfHwwfHx8MA%3D%3D" alt="网站设计" class="grid-img">
+            <div class="item-overlay">
+                <h3 class="project-title">电商平台设计</h3>
+                <div class="project-category">网页设计</div>
+            </div>
+        </div>
+        
+        <!-- 项目4 -->
+        <div class="grid-item" data-id="project4">
+            <img src="https://images.unsplash.com/photo-1561070791-2526d45794b6?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTh8fGRlc2lnbnxlbnwwfHwwfHx8MA%3D%3D" alt="插画设计" class="grid-img">
+            <div class="item-overlay">
+                <h3 class="project-title">概念艺术插画</h3>
+                <div class="project-category">插画设计</div>
+            </div>
+        </div>
+        
+        <!-- 项目5 -->
+        <div class="grid-item" data-id="project5">
+            <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGFja2FnaW5nfGVufDB8fDB8fHww" alt="包装设计" class="grid-img">
+            <div class="item-overlay">
+                <h3 class="project-title">产品包装创新</h3>
+                <div class="project-category">包装设计</div>
+            </div>
+        </div>
+        
+        <!-- 项目6 -->
+        <div class="grid-item" data-id="project6">
+            <img src="https://images.unsplash.com/photo-1576595768827-6f4a70b5f7dc?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHBvc3RlcnxlbnwwfHwwfHx8MA%3D%3D" alt="海报设计" class="grid-img">
+            <div class="item-overlay">
+                <h3 class="project-title">电影节海报</h3>
+                <div class="project-category">海报设计</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目模态框 -->
+    <div id="projectModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <img src="" alt="项目大图" class="modal-img">
+            <div class="modal-info">
+                <h2 class="modal-title">项目名称</h2>
+                <p class="modal-desc">项目详细描述将在此处展示...</p>
+                <p class="modal-date">2023</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚/联系信息 -->
+    <footer class="footer" id="contact">
+        <div class="contact-info">
+            <h2>联系我们</h2>
+            <p>邮件: contact@portfolio.com</p>
+            <p>电话: +1 (555) 123-4567</p>
+            <p>地址: 创意设计中心, 数字城市</p>
+        </div>
+        <div class="social-links">
+            <a href="#" class="social-icon">fb</a>
+            <a href="#" class="social-icon">in</a>
+            <a href="#" class="social-icon">ig</a>
+            <a href="#" class="social-icon">tw</a>
+        </div>
+    </footer>
+
+    <script>
+        // 模态框功能
+        const gridItems = document.querySelectorAll('.grid-item');
+        const modal = document.getElementById('projectModal');
+        const modalImg = modal.querySelector('.modal-img');
+        const modalTitle = modal.querySelector('.modal-title');
+        const modalDesc = modal.querySelector('.modal-desc');
+        const modalDate = modal.querySelector('.modal-date');
+        const closeModal = document.querySelector('.close-modal');
+        
+        // 项目详细信息
+        const projects = {
+            project1: {
+                title: "商业品牌重塑",
+                img: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGRlc2lnbnxlbnwwfHwwfHx8MA%3D%3D",
+                desc: "为全球科技公司完成的全新品牌标识设计项目。我们重新设计了公司的视觉识别系统，包括标志、色彩方案和版式设计，以更好地反映其创新形象和市场定位。该项目历时6个月，涉及用户研究、品牌战略制定和全面的视觉系统开发。",
+                date: "2023年6月完成"
+            },
+            project2: {
+                title: "数字银行应用",
+                img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8ZGVzaWdufGVufDB8fDB8fHww",
+                desc: "为新一代数字银行设计的移动应用界面，专注于简化用户体验和增强金融安全性。设计包括从用户流程规划到高保真原型的整个设计过程。我们的解决方案使关键任务完成时间减少了40%，并获得了95%的用户满意度评分。",
+                date: "2023年3月完成"
+            },
+            project3: {
+                title: "电商平台设计",
+                img: "https://images.unsplash.com/photo-1591165045886-5ade44949b28?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDF8fGRlc2lnbnxlbnwwfHwwfHx8MA%3D%3D",
+                desc: "为国际零售品牌设计的全新电子商务平台。我们专注于创造沉浸式的购物体验，整合个性化推荐和AR试穿功能。响应式设计确保在各种设备上提供一致的购物体验，同时创新的导航模式使购物车转化率提高了35%。",
+                date: "2023年1月完成"
+            },
+            project4: {
+                title: "概念艺术插画",
+                img: "https://images.unsplash.com/photo-1561070791-2526d45794b6?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTh8fGRlc2lnbnxlbnwwfHwwfHx8MA%3D%3D",
+                desc: "为科幻电影创作的概念艺术和角色设计系列。这些作品探索了赛博朋克美学和后人类主题，使用了混合媒介技术包括数字绘画和3D渲染。系列作品已在多个艺术画廊展出，并被收录于《现代概念艺术选集》。",
+                date: "2022年11月完成"
+            },
+            project5: {
+                title: "产品包装创新",
+                img: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGFja2FnaW5nfGVufDB8fDB8fHww",
+                desc: "为环保美容品牌设计的可回收包装系统。该项目结合了可持续材料研究和美学创新，创造了既环保又吸引消费者的包装方案。新包装完全可生物降解，使用大豆油墨印刷，并获得了绿色设计奖。",
+                date: "2022年9月完成"
+            },
+            project6: {
+                title: "电影节海报",
+                img: "https://images.unsplash.com/photo-1576595768827-6f4a70b5f7dc?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHBvc3RlcnxlbnwwfHwwfHx8MA%3D%3D",
+                desc: "为国际电影节设计的系列海报，灵感来自光影的戏剧性和电影的本质。该系列采用了大胆的版式设计和巧妙的负空间运用，每张海报代表一种电影类型。该项目已获得多个设计奖项，包括AIGA设计奖。",
+                date: "2022年8月完成"
+            }
+        };
+        
+        // 点击网格项目打开模态框
+        gridItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const projectId = item.getAttribute('data-id');
+                const project = projects[projectId];
+                
+                if (project) {
+                    modalImg.src = project.img;
+                    modalImg.alt = project.title;
+                    modalTitle.textContent = project.title;
+                    modalDesc.textContent = project.desc;
+                    modalDate.textContent = project.date;
+                    
+                    modal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+        
+        // 关闭模态框
+        function closeProjectModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        closeModal.addEventListener('click', closeProjectModal);
+        
+        // 点击模态框外部关闭
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeProjectModal();
+            }
+        });
+        
+        // 注册Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker 注册成功: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker 注册失败: ', error);
+                    });
+            });
+        }
+        
+        // PWA安装提示
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            const installPrompt = e;
+            const installBtn = document.createElement('button');
+            installBtn.textContent = '安装应用';
+            installBtn.classList.add('install-btn');
+            document.querySelector('.navbar').appendChild(installBtn);
+            
+            installBtn.addEventListener('click', () => {
+                installPrompt.prompt();
+                installBtn.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
